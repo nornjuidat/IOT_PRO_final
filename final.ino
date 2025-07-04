@@ -86,3 +86,8 @@ void loop() {
     digitalWrite(ledPin, millis() % 500 < 250 ? HIGH : LOW);
     tone(buzzerPin, millis() % 1000 < 500 ? 800 : 1200);
   } 
+ else if (systemState == NEUTRALIZED) {
+    digitalWrite(ledPin, LOW);
+    noTone(buzzerPin);
+  }
+}
