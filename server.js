@@ -22,3 +22,16 @@ wss.on("connection", (ws, req) => {
           browserSocket.send(JSON.stringify(data));
         }
       }
+
+      else if (data.command === "cancel") {
+        console.log("Cancel command from browser");
+
+        if (espSocket && espSocket.readyState === WebSocket.OPEN) {
+          espSocket.send(JSON.stringify({ command: "cancel" }));
+        }
+      }
+
+    } catch (err) {
+      console.error("Invalid message:", message);
+    }
+  });
