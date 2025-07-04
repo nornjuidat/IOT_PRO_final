@@ -64,3 +64,25 @@ void setup() {
 
   sendStatus("NORMAL");
 }
+
+void loop() {
+  webSocket.loop();
+
+  if (panicPressed && systemState == NORMAL) {
+    panicPressed = false;
+    systemState = ALERT;
+    sendStatus("ALERT");
+  }
+
+  if (systemState == NORMAL) {
+    if (millis() - lastBlink > 5000) {
+      digitalWrite(ledPin, ledState ? HIGH : LOW);
+      ledState = !ledState;
+      lastBlink = millis();
+    }
+    noTone(buzzerPin);
+  } 
+  else if (systemState == ALERT) {
+    digitalWrite(ledPin, millis() % 500 < 250 ? HIGH : LOW);
+    tone(buzzerPin, millis() % 1000 < 500 ? 800 : 1200);
+  } 
