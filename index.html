@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>לחצן מצוקה חכם</title>
 </head>
 <body>
-    
+     <h1>סטטוס המערכת</h1>
+  <div id="status" class="status normal">שגרה</div>
+  <button onclick="cancelAlert()">ביטול מצוקה</button>
+
+  <script>
+    const statusDiv = document.getElementById("status");
+    const socket = new WebSocket("ws://localhost:3000");
+
+    socket.onopen = () => {
+      console.log("Connected to WebSocket server");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Received:", data);
+
+      if (data.status === "ALERT") {
+        statusDiv.textContent = "מצוקה!";
+        statusDiv.className = "status alert";
+      } else if (data.status === "NEUTRALIZED") {
+        statusDiv.textContent = "מצב מנוטרל";
+        statusDiv.className = "status neutralized";
+      } else {
+        statusDiv.textContent = "שגרה";
+        statusDiv.className = "status normal";
+      }
+    };
+
+    function cancelAlert() {
+      const command = { command: "cancel" };
+      socket.send(JSON.stringify(command));
+    }
+  </script>
+</body>
+</html>
+
 </body>
 </html>
