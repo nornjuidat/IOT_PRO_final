@@ -44,3 +44,23 @@ void webSocketEvent(WStype_t type, uint8_t* payload, size_t length) {
     }
   }
 }
+
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  attachInterrupt(digitalPinToInterrupt(buttonPin), handleInterrupt, FALLING);
+
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+  }
+
+  webSocket.begin(websocket_server, websocket_port, websocket_path);
+  webSocket.onEvent(webSocketEvent);
+  webSocket.setReconnectInterval(5000);
+
+  sendStatus("NORMAL");
+}
