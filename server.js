@@ -35,3 +35,21 @@ wss.on("connection", (ws, req) => {
       console.error("Invalid message:", message);
     }
   });
+  ws.on("close", () => {
+    if (ws === espSocket) {
+      console.log("ESP disconnected");
+      espSocket = null;
+    } else if (ws === browserSocket) {
+      console.log("Browser disconnected");
+      browserSocket = null;
+    }
+  });
+
+  if (!browserSocket) {
+    browserSocket = ws;
+    console.log("Browser connected");
+  }
+});
+
+console.log(`WebSocket server is running on ws://localhost:${PORT}`);
+
